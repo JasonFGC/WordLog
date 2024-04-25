@@ -4,6 +4,7 @@
 # Last Update: 2024 - 04 - 24
 # Trying to keep comments plentiful to document progress + have explanations for the stuff I'm doing
 # for discord implementation 
+from word import * # Imports my word class, would rather keep a different object in a different file for clarity
 import discord
 from discord.ext import commands
 from config import * # Keeps sensitive information private
