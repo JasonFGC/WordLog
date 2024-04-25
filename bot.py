@@ -1,13 +1,13 @@
-#WordLog bot 
-#Jason Lam
-#Project started 2024 - 04 - 23
-#Last Update: 2024 - 04 - 24
-#Trying to keep comments plentiful to document progress + have explanations for the stuff I'm doing
-#for discord implementation 
+# WordLog bot 
+# Jason Lam
+# Project started 2024 - 04 - 23
+# Last Update: 2024 - 04 - 24
+# Trying to keep comments plentiful to document progress + have explanations for the stuff I'm doing
+# for discord implementation 
 import discord
 from discord.ext import commands
-from config import * #Keeps sensitive information private
-#for implementation of firebase / firestore
+from config import * # Keeps sensitive information private
+# for implementation of firebase / firestore
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -19,11 +19,11 @@ import datetime
 
 wordbank = ["test"]
 
-#Apr 23: Firestore has been created, functionality low, figuring out how to store things first
-#Apr 24: Firestore database changed, added basic functionality (words get passed through the bot, if bot sees a word, it catches it. Doesn't catch itself.)
-#Words cannot be duplicate in the wordbank. I want to start making this functional with firebase, but I'll need make a per server-esque method of using the 
-#database, currently it's set up with one collection named servers, with multiple documents that should include the servers that the bot is in.
-#It should create a new document depending on the server ID, and things such as wordbank will be taking words from the document for that corresponding server.
+# Apr 23: Firestore has been created, functionality low, figuring out how to store things first
+# Apr 24: Firestore database changed, added basic functionality (words get passed through the bot, if bot sees a word, it catches it. Doesn't catch itself.)
+# Words cannot be duplicate in the wordbank. I want to start making this functional with firebase, but I'll need make a per server-esque method of using the 
+# database, currently it's set up with one collection named servers, with multiple documents that should include the servers that the bot is in.
+# It should create a new document depending on the server ID, and things such as wordbank will be taking words from the document for that corresponding server.
 #
 bot=commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
@@ -59,16 +59,25 @@ async def checkDatabaseExists(databaseName):
         print(f"Document data: {doc.to_dict()}")
     else:
         print("No such document!")
-#Checks every message for commands. If it does not have commands, checks for words.
+
+# I'll uncomment this when I start getting the database functionality working. I want to make it so the database 
+# is structured where the collection is actually the server, the documents are each word and each word has fields, for if it's limited, what word it even is, 
+# and the actual limit itself (how many times per week.)
+#@bot.command()
+#async def addWeeklyLimit(word):
+
+    
+
+# Checks every message for commands. If it does not have commands, checks for words.
 @bot.event
 async def on_message(message):
-    #This needs to be here, without it, it will not process other commands.
+    # This needs to be here, without it, it will not process other commands.
     await bot.process_commands(message)
 
-    #This prevents the bot from catching itself.
+    # This prevents the bot from catching itself.
     if message.author == bot.user:
         return
-    #This prevents the bot from catching messages that are intended to be commands.
+    # This prevents the bot from catching messages that are intended to be commands.
     if message.content[0] != "!":
         #This is for catching words in messages.
         personsaid = str(message.author)
