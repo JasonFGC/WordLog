@@ -1,7 +1,8 @@
 class Word:
-    def init (self, limitNum=0, isLimited=False, whichWord=""):
+    def __init__(self,currLim=0, limitNum=0, isLimited=False, whichWord=""):
         # limit is the limit that you can use the word, limited is if it is being limited weekly, word is the word that is being tracked.\
         # limit is an int, limited is a boolean, word is a string
+        self.limitCount = currLim
         self.limit = limitNum
         self.limited = isLimited
         self.word = whichWord

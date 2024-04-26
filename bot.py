@@ -18,7 +18,8 @@ db = firestore.client()
 #for weekly resets etc
 import datetime
 
-wordbank = ["test"]
+testword = Word(0, False, "test")
+wordbank = [testword]
 
 # Apr 23: Firestore has been created, functionality low, figuring out how to store things first
 # Apr 24: Firestore database changed, added basic functionality (words get passed through the bot, if bot sees a word, it catches it. Doesn't catch itself.)
@@ -39,18 +40,25 @@ async def hi(ctx):
 
 @bot.command()
 async def add(ctx , argword):
-    if argword in wordbank:
+    inWords = 0
+    for i in range(len(wordbank)):
+        if argword == wordbank[i].getWord():
+            inWords+=1
+    if inWords>=1:
         await ctx.send("This word is already in the wordbank.")
     else:
         await ctx.send("You have added "+argword+" to the list of tracked words.")
-        wordbank.append(argword)
+        wordbank.append(Word(0,0,False,argword))
 
 @bot.command()
 async def trackedwords(ctx):
     wordoutput =""
-    for i in wordbank:
-        wordoutput += ' "'+i+'"'
-    await ctx.send("The list of words that are being tracked is:" + wordoutput + ".")
+    for i in range(len(wordbank)):
+        wordoutput += ' "'+wordbank[i].getWord()+'"'
+    if len(wordbank) <=0:
+        await ctx.send("There are no words currently being tracked.")
+    else:
+        await ctx.send("The list of words that are being tracked is:" + wordoutput + ".")
 
 @bot.command()
 async def checkDatabaseExists(databaseName):
@@ -86,17 +94,28 @@ async def on_message(message):
         wordOutput= ""
         messageSplit = message.content.casefold().split()
         for i in range(len(messageSplit)):
-            if messageSplit[i] in wordbank:
-                print(messageSplit[i])
-                trigger +=1
-                wordOutput += ' "' + messageSplit[i] + '"'
-                print(personsaid)
+            for j in range(len(wordbank)):
+                if messageSplit[i] == wordbank[j].getWord():
+                    print(messageSplit[i])
+                    trigger +=1
+                    wordOutput += ' "' + messageSplit[i] + '"'
+                    print(personsaid)
         if trigger != 0:            
             #await message.add_reaction('U+1FAF5')
             await message.channel.send(personsaid + ' has used:' + wordOutput+'.')     
-    
 
-    
+
+# quick thing for when it joins a server
+@bot.event
+async def on_guild_join(guild):
+    for channel in guild.text_channels:
+        if channel.permissions_for(guild.me).send_messages:
+            await channel.send("Hello! I'm WordLog! I track words that you want me to track! For more info, type !help!")
+        break
+
+@bot.command()
+async def commands(ctx):
+    await ctx.send("Here is the list of commands:\n!add WORD - This command adds a work to be tracked \n!trackedwords - This command shows you which words are being tracked. \n!remove WORD - This removes the word from being tracked. \n!setlimit WORD - This allows you to set a weekly limit for a word.\n!removelim WORD - This removes the limit from this word.")
     
 
 
