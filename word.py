@@ -10,11 +10,17 @@ class Word:
     def getWord(self):
         return self.word
     
+    def getLimitCount(self):
+        return self.limitCount
+    
     def getLimit(self):
         return self.limit
     
     def isLimited(self):
         return self.limited
+    
+    def setLimitCount(self, currLim):
+        self.limitCount = currLim
     
     def setWord(self, whichWord):
         self.word = whichWord

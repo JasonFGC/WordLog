@@ -18,7 +18,7 @@ db = firestore.client()
 #for weekly resets etc
 import datetime
 
-testword = Word(0, False, "test")
+testword = Word(0,0, False, "test")
 wordbank = [testword]
 
 # Apr 23: Firestore has been created, functionality low, figuring out how to store things first
@@ -101,7 +101,7 @@ async def on_message(message):
                     wordOutput += ' "' + messageSplit[i] + '"'
                     print(personsaid)
         if trigger != 0:            
-            #await message.add_reaction('U+1FAF5')
+            await message.add_reaction('\U0001FAF5')
             await message.channel.send(personsaid + ' has used:' + wordOutput+'.')     
 
 
@@ -110,7 +110,7 @@ async def on_message(message):
 async def on_guild_join(guild):
     for channel in guild.text_channels:
         if channel.permissions_for(guild.me).send_messages:
-            await channel.send("Hello! I'm WordLog! I track words that you want me to track! For more info, type !help!")
+            await channel.send("Hello! I'm WordLog! I track words that you want me to track! For more info, type !commands!")
         break
 
 @bot.command()
