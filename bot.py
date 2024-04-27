@@ -42,13 +42,13 @@ async def hi(ctx):
 async def add(ctx , argword):
     inWords = 0
     for i in range(len(wordbank)):
-        if argword == wordbank[i].getWord():
+        if argword.casefold() == wordbank[i].getWord():
             inWords+=1
     if inWords>=1:
         await ctx.send("This word is already in the wordbank.")
     else:
-        await ctx.send("You have added "+argword+" to the list of tracked words.")
-        wordbank.append(Word(0,0,False,argword))
+        await ctx.send("You have added "+argword.casefold()+" to the list of tracked words.")
+        wordbank.append(Word(0,0,False,argword.casefold()))
 
 @bot.command()
 async def trackedwords(ctx):
